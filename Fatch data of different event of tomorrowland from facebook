@@ -1,0 +1,126 @@
+Private Sub delay(seconds As Long)
+    Dim endtime As Date
+    endtime = DateAdd("s", seconds, Now())
+    Do While Now() < endtime
+        DoEvents
+    Loop
+End Sub
+
+
+Sub tomorrowland()
+Dim ie As InternetExplorer
+Dim html_doc As HTMLDocument
+Dim html_element As IHTMLElement
+Dim hopt As MSHTML.HTMLOptionElement
+Dim hsel As MSHTML.HTMLSelectElement
+Dim link As Variant
+Dim l As Variant
+Dim str, url As String
+Dim i, j As Integer
+ i = 25
+Set ie = New InternetExplorer
+    With ie
+        .Visible = True
+        .Silent = True
+    End With
+    
+    For j = 26 To 43
+    url = "https://www.facebook.com/events/" & ThisWorkbook.Worksheets("API").Range("B" & j).Value
+    ie.navigate url
+    Do While ie.readyState <> READYSTATE_COMPLETE Or ie.Busy: DoEvents: Loop
+    delay 2
+   
+    
+    Set link = ie.document.getElementsByTagName("span")
+        For Each l In link
+            If l.className = "_5x8v _4ij8 _8o lfloat _ohe _5a5i _5a5j" Then
+                ThisWorkbook.Worksheets("DATA").Range("A" & i) = l.innerText
+                'ThisWorkbook.Worksheets("DATA").Range("B" & i) = l.innerHTML
+                
+            
+            End If
+        Next l
+ '===========================================================
+     Set link = Nothing
+     Set l = Nothing
+       Set link = ie.document.getElementsByTagName("h1")
+        For Each l In link
+            If l.className = "_5gmx" Then
+                ThisWorkbook.Worksheets("DATA").Range("B" & i) = l.innerText
+                'ThisWorkbook.Worksheets("DATA").Range("B" & i) = l.innerHTML
+                
+            
+            End If
+        Next l
+'=============================================================
+     Set link = Nothing
+     Set l = Nothing
+       Set link = ie.document.getElementsByTagName("li")
+        For Each l In link
+            If l.className = "_3slj" Then
+            Debug.Print l.innerText
+                ThisWorkbook.Worksheets("DATA").Range("C" & i) = l.innerText
+                Exit For
+            End If
+        Next l
+        
+ '===================================================================
+      Set link = Nothing
+     Set l = Nothing
+       Set link = ie.document.getElementsByTagName("li")
+        For Each l In link
+            If l.className = "_3xd0 _3slj" Then
+            Debug.Print l.innerText
+                ThisWorkbook.Worksheets("DATA").Range("D" & i) = l.innerText
+                Exit For
+            End If
+        Next l
+        
+ '===================================================================
+ 
+ ie.document.getElementsByClassName("_5z74")(0).Click
+ 
+ Do While ie.readyState <> READYSTATE_COMPLETE Or ie.Busy: DoEvents: Loop
+    delay 2
+ 
+  '===================================================================
+      Set link = Nothing
+     Set l = Nothing
+       Set link = ie.document.getElementsByTagName("span")
+        For Each l In link
+            If l.className = "className _1y48" Then
+            Debug.Print l.innerText
+            If l.innerText Like "*INTERESTED*" Then
+                ThisWorkbook.Worksheets("DATA").Range("E" & i) = l.innerText
+                Exit For
+            End If
+            End If
+        Next l
+        
+   '===================================================================
+      Set link = Nothing
+     Set l = Nothing
+       Set link = ie.document.getElementsByTagName("span")
+        For Each l In link
+            If l.className = "className _1y48 _1i81" Then
+            Debug.Print l.innerText
+                ThisWorkbook.Worksheets("DATA").Range("F" & i) = l.innerText
+                Exit For
+            End If
+        Next l
+ 
+  '===================================================================
+      Set link = Nothing
+     Set l = Nothing
+       Set link = ie.document.getElementsByTagName("span")
+        For Each l In link
+            If l.className = "className _1y48" Then
+            Debug.Print l.innerText
+                ThisWorkbook.Worksheets("DATA").Range("G" & i) = l.innerText
+                
+            End If
+        Next l
+        i = i + 1
+    Next j
+End Sub
+
