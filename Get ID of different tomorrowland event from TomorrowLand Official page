@@ -1,0 +1,41 @@
+Private Sub delay(seconds As Long)
+    Dim endtime As Date
+    endtime = DateAdd("s", seconds, Now())
+    Do While Now() < endtime
+        DoEvents
+    Loop
+End Sub
+
+
+Sub tomorrowland()
+Dim ie As InternetExplorer
+Dim html_doc As HTMLDocument
+Dim html_element As IHTMLElement
+Dim hopt As MSHTML.HTMLOptionElement
+Dim hsel As MSHTML.HTMLSelectElement
+Dim link As Variant
+Dim l As Variant
+Dim str As String
+Dim i As Integer
+
+Set ie = New InternetExplorer
+    With ie
+        .Visible = True
+        .Silent = True
+        .navigate "https://www.facebook.com/pg/tomorrowland/events/?ref=page_internal"
+    End With
+    Do While ie.readyState <> READYSTATE_COMPLETE Or ie.Busy: DoEvents: Loop
+    delay 10
+    i = 1
+    Set link = ie.document.getElementsByTagName("DIV")
+        For Each l In link
+            If l.className = "_4dmk" Then
+                ThisWorkbook.ActiveSheet.Range("A" & i) = l.innerText
+                ThisWorkbook.ActiveSheet.Range("B" & i) = l.innerHTML
+                
+            i = i + 1
+            End If
+        Next l
+    
+    
+End Sub
